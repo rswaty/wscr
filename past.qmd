@@ -1,0 +1,326 @@
+---
+title: "Past"
+---
+### LANDFIRE's Biophysical Settings (BpSs)
+
+<br>
+
+> *BpS models represent the vegetation system that may have been dominant on the landscape prior to Euro-American settlement. These models are based on a combination of the current environment and an approximation of the historical disturbance regime.* [Read more](https://landfire.gov/bps.php){target="blank"}.
+
+Check out this 3-minute tutorial for a quick refresher on the [basics of Biophysical Settings Models](https://youtu.be/xjaWJCe7udQ){target="blank"}.
+
+Use this page as a starting point to explore the most prevalent BpSs for your analysis area. In addition to the charts and maps, the historical disturbance data can be directly accessed using this site.
+
+## Most prevalent Biophysical Settings
+
+<br>
+
+![](images/bps.jpg){width=100%}
+*Biophysical Settings with minor representation removed from map and chart below for clarity*
+<br>
+<br>
+
+
+
+```{r bps chart, message=FALSE, warning=FALSE, echo=FALSE, fig.width=10, fig.height=10}
+library(tidyverse)
+library(scales)
+library(stringr)
+library(DT)
+
+bps_data <- read.csv("data/bps_aoi_attributes.csv")
+
+
+# Read the data from the CSV file without column names
+bps_qgis_list <- read_csv("data/bps_qgis.clr", col_names = FALSE)
+
+# Remove numbers and extract unique ecosystems
+bps_qgis_list <- bps_qgis_list %>%
+ mutate(bps = str_remove_all(X1, "^\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+")) %>%
+ distinct(bps)
+
+
+# Read the data from the CSV file without column names
+bps_qgis_list <- read_csv("data/bps_qgis.clr", col_names = FALSE)
+
+# Remove numbers and extract unique ecosystems
+bps_qgis_list <- bps_qgis_list %>%
+  mutate(ecosystem = str_remove_all(X1, "^\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+")) %>%
+  distinct(ecosystem)
+
+# Assuming bps_data is already loaded
+bpsname <- bps_data %>%
+  filter(BPS_NAME %in% bps_qgis_list$ecosystem) %>%
+  group_by(BPS_NAME) %>%
+  summarize(ACRES = sum(ACRES),
+            REL_PERCENT = sum(REL_PERCENT)) %>%
+  arrange(desc(REL_PERCENT)) %>%
+  top_n(n = 10, wt = REL_PERCENT)
+
+
+
+# plot
+bpsChart <- 
+  ggplot(data = bpsname, aes(x = BPS_NAME, y = ACRES)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Top Biophysical Settings from map",
+    subtitle = "Represents dominant vegetation systems pre-European colonization",
+    caption = "Data from landfire.gov",
+    x = "",
+    y = "Acres") +
+  scale_x_discrete(limits = rev(bpsname$BPS_NAME),
+                   labels = function(x) str_wrap(x, width = 18)) +
+  coord_flip() +
+  theme_bw(base_size = 14) +
+  scale_y_continuous(labels = comma) 
+
+
+
+bpsChart
+```
+
+## Associated Biophysical Settings descriptions
+
+Below you will find a list of Biophysical Settings (BpS) in the map and chart  linked to their descriptions.  Note:
+
+* There may be multiple BpS names listed.  If so, this is because your landscape spans multiple LANDFIRE Map Zones and has multiple 'variants' for those BPSs.  
+* The names below are followed by a number in parentheses.  The first 5-digit number is the BPS Code.  The following numbers reprent the Map Zones.  For example, "13020_65_66" is ‘Laurentian-Acadian Northern Hardwoods forest’ BpS (13020) in Map Zones 65 and 66.
+* The map below will help orient you to the Map Zones for your landscape.
+
+<br>
+
+
+```{r}
+#| label: mz map
+#| echo: false
+#| message: false
+#| warning: false
+library(sf)
+library(tmap)
+
+tmap_mode("view")
+
+
+# Replace 'path_to_map_zones_shapefile' and 'path_to_additional_shapefile' with the actual paths to your shapefiles
+map_zones <- st_read("data/conus_mapzones_102611.shp", quiet = TRUE)
+additional_shape <- st_read("data/ely_blm.shp", quiet = TRUE)
+
+
+map_zones <- st_transform(map_zones, crs = 4326)
+additional_shape <- st_transform(additional_shape, crs = 4326)
+
+
+# Create the tmap
+
+
+tm_shape(map_zones) +
+  tm_borders(col = "black", lwd = 2) +
+  tm_text("ZONE_NUM", size = 1, col = "black", fontface = "bold") +
+  tm_shape(additional_shape) +
+  tm_borders(col = "green", lwd = 2) +
+  tm_fill(fill = "green", fill_alpha = 0.5) +
+  tm_view(bbox = st_bbox(additional_shape)) +
+  tm_layout(legend.show = FALSE)
+```
+
+<br>
+
+
+
+**Clicking link will initiate a download of a Microsoft Word file.  If you have any issues with this please contact [LANDFIRE](mailto:landfire@tnc.org){target="blank"}.**
+
+
+```{r}
+#| label: get bps docs
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(htmltools)
+library(dplyr)
+
+
+# Get unique model codes for the top 10 BPS names
+unique_model_codes <- unique(bps_data$BPS_MODEL[bps_data$BPS_NAME %in% bpsname$BPS_NAME])
+
+# Filter the dataframe to include only rows with unique model codes and top 10 BPS names
+bps_urls <- bps_data %>% 
+  filter(BPS_MODEL %in% unique_model_codes) %>% 
+  distinct(BPS_MODEL, .keep_all = TRUE) %>%
+  select(c(BPS_NAME, BPS_MODEL))
+
+# Merge top_bps with bps_urls to get REL_PERCENT
+bps_urls <- bps_urls %>%
+  left_join(bps_data %>%
+              select(BPS_MODEL, REL_PERCENT), 
+            by = "BPS_MODEL")
+
+bps_urls <- bps_urls %>%
+  group_by(BPS_NAME, BPS_MODEL) %>%
+  summarize(REL_PERCENT = sum(REL_PERCENT))
+
+# URL template
+url_template <- "https://github.com/rswaty/bps_docs_parse/raw/main/all_bps_docs/10080_1_2_3_7.docx"
+
+# Generate URLs by replacing the model_code in the URL template
+bps_urls <- bps_urls %>%
+  mutate(URL = sapply(BPS_MODEL, function(code) {
+    gsub("10080_1_2_3_7", code, url_template)
+  }))
+
+# Create clickable hyperlinks with BPS names, model codes, and REL_PERCENT without decimal places
+clickable_names <- sapply(seq_along(bps_urls$URL), function(i) {
+  paste0('<a href="', bps_urls$URL[i], '" target="_blank">', bps_urls$BPS_NAME[i], ' (', bps_urls$BPS_MODEL[i], ') - ', round(bps_urls$REL_PERCENT[i]), '%</a>')
+})
+
+# Render the list of hyperlinked BPS names as HTML
+html_output <- HTML(paste(clickable_names, collapse = "<br>"))
+
+# Print the HTML output
+html_output
+
+
+
+
+```
+
+
+<br>
+
+
+## Historical Fire Regimes
+
+![](images/mfri.jpg){width=100%}
+
+<br>
+<br>
+
+
+```{r fire bar, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=10}
+# read bps attribute table .csv and summarize
+annualFire <- bps_data %>%
+  mutate(annual_fire_acres = ((1/FRI_ALLFIR)*ACRES)) %>%
+  filter(BPS_NAME != 'Open Water') %>%
+  group_by(BPS_NAME) %>%
+  summarize(acres = sum(annual_fire_acres)) %>%
+  arrange(desc(acres)) %>%
+  top_n(n = 10, wt = acres)
+
+# plot
+fireChart <- 
+  ggplot(data = annualFire, aes(x = BPS_NAME, y = acres)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Annual Acres Burned Prior to European Colonization ",
+    subtitle = "Per Biophysical Setting",
+    caption = "\nData from landfire.gov",
+    x = "",
+    y = "Acres") +
+  scale_x_discrete(limits = rev(annualFire$BPS_NAME),
+                   labels = function(x) str_wrap(x, width = 18)) +
+  scale_y_continuous(name = 'Acres', labels = comma) +
+  coord_flip() +
+  theme_bw(base_size = 14) +
+  theme(plot.margin = margin(10, 30, 0, 0))
+
+fireChart
+
+
+```
+
+<br>
+<br>
+
+
+
+## Historical disturbances per ecosystem
+
+*Note: chart will show disturbances of all ecosystems until a single one is selected in the dropdown box.*
+
+```{r all disturbances, echo=FALSE, message=FALSE, warning=FALSE, out.width="100%"}
+
+# Load packages
+library(tidyverse)
+library(crosstalk)
+library(ggsci)
+library(scales)
+library(plotly)
+library(htmltools) # Add this library for tags$style
+
+
+# This code reads a CSV file named "bps_aoi_disturbances.csv" from the "data" directory into a data frame.
+bps_aoi_disturbances <- read_csv("data/bps_aoi_disturbances.csv") 
+
+# The data frame is then filtered to exclude certain values in the "TransitionGroupID" column. 
+# The excluded values are: "All Fire", "All Transitions", "Alternative Succession", 
+# "Non Fire Disturbances", "Non Replacement Fire", "Optional 1", "Optional 2".
+bps_aoi_disturbances <- bps_aoi_disturbances %>%
+  filter(!TransitionGroupID %in% c("All Fire",
+                                   "All Transitions",
+                                   "Alternative Succession",
+                                   "Non Fire Disturbances",
+                                   "Non Replacement Fire",
+                                   "Optional 1",
+                                   "Optional 2")) 
+
+# The data frame is then grouped by the "BpS_Name" and "TransitionGroupID" columns. 
+# The annual_dist_acres column is then summarized with the sum of all values for each group. 
+bps_aoi_disturbances <- bps_aoi_disturbances %>%
+  group_by(BpS_Name, TransitionGroupID) %>%
+  summarise(annual_dist_acres = sum(annual_dist_acres)) 
+
+# The annual_dist_acres column is then converted to a numeric format, 
+# with trailing zeros removed and rounded to 0 decimal places.
+bps_aoi_disturbances <- bps_aoi_disturbances %>% 
+  mutate(annual_dist_acres = as.numeric(format(round(annual_dist_acres, 0), scientific = FALSE)))
+
+# A new data frame "sdbps_aoi_disturbances" is created, 
+# with a highlight function applied to the original data frame.
+sdbps_aoi_disturbances <- highlight_key(bps_aoi_disturbances)
+
+# A ggplot chart is created using the "sdbps_aoi_disturbances" data frame. 
+# The chart plots the TransitionGroupID column on the X-axis, 
+# and the annual_dist_acres column on the Y-axis. 
+# The chart has a title, labels for the X and Y axes, 
+# and the Y-axis has a continuous scale with comma formatted labels.
+bpsChart <- 
+  ggplot(sdbps_aoi_disturbances, aes(x = TransitionGroupID, y = annual_dist_acres)) +
+  geom_point(size = 2) +
+  labs(
+    title = "Annual historical disturbances",
+    x = "",
+    y = "Acres") +
+  coord_flip() +
+  scale_y_continuous(labels = comma)+
+  theme_bw()
+
+# The chart is displayed.
+#bpsChart
+
+# A chart with a dropdown list is created with tooltips disabled.
+bscols(widths = c(3, 12),
+       tags$style(HTML("
+  .selectize-input {
+    font-size: 18px;
+  }
+  .selectize-dropdown {
+    font-size: 18px;
+  }
+")),
+
+       filter_select("BP", 
+                     "Select ecosystem", 
+                     sdbps_aoi_disturbances, 
+                     ~ BpS_Name,
+                     multiple = FALSE),
+       ggplotly(bpsChart,
+                tooltip = FALSE,
+                width = 815)
+)
+```
+
+
+
+

@@ -1,0 +1,274 @@
+---
+title: "Comparisons"
+---
+
+```{r include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+library(plotly)
+library(RColorBrewer)
+library(readr)
+library(scales)
+library(tidygraph)
+library(tidyverse)
+library(DT)
+
+```
+
+## Comparing Past vs. Present Conditions
+
+Using LANDFIRE’s BpS products, we explore two different ways to visualize past vs. current vegetation patterns.
+
+-   First, we present **changes in broad ecosystem types** using an interactive comparison diagram. To present these broad ecosystem trends more effectively, we combined classifications of Existing Vegetation Types (EVT) into broader categories. 
+
+-   Second, we compare **amounts of succession classes** (past and present) for the most prevalent ecosystems.
+
+
+### Sankey Chart to explore broad changes in ecosystems, past to current
+
+In the chart below the vertical bands represent amounts of the broad ecosystem types, with the past amounts on the left and current amounts on the right. Hovering over the verticle bands will illuminate the amounts in acres. The 'traces' or grey bands show transitions from past to current.  For example, some areas that may have been mapped as conifer in the Biophysical Settings data might currently be mapped as conifer in the Existing Vegetation Type data set, and some of those areas formerly mapped as conifer might be mapped as having been converted to a developed land use. Hovering over the traces will illuminate amounts in acres. 
+
+
+
+
+```{r}
+#| label: combine bps and evt, wrangle for sankey
+#| message: false
+#| warning: false
+#| include: false
+
+
+
+
+bps2evt <- read_csv("data/bps2evt.csv")
+
+
+# Remove unwanted categories from GROUPVEG and EVT_PHYS fields
+bps2evt <- bps2evt %>%
+ filter(!GROUPVEG %in% c("Open Water", "Barren-Rock/Sand/Clay")) %>%
+ filter(!EVT_PHYS %in% c("Open Water", "Sparsely Vegetated"))
+
+
+# Lump all EVT_PHYS types with 'Developed' in the name into one category named 'Developed'
+bps2evt <- bps2evt %>%
+ mutate(EVT_PHYS = ifelse(grepl("Developed", EVT_PHYS), "Developed", EVT_PHYS))
+
+
+# Remove rows with NA values
+bps2evt <- bps2evt %>%
+  drop_na()
+
+snkyPdata <- bps2evt |>
+  group_by(GROUPVEG, EVT_PHYS) |>
+  summarize(value = sum(acres)) |>
+  rename(source = GROUPVEG,
+         target = EVT_PHYS)
+
+
+
+
+
+
+
+
+```
+
+
+```{r}
+#| label: sankey chart
+#| echo: false
+#| message: false
+#| warning: false
+#| out.height: 12
+#| fig.height: 12
+
+# Concatenate "Past " to source values and "Current " to target values
+snkyPdata <- snkyPdata %>%
+  mutate(source = paste("Past", source),
+         target = paste("Current", target))
+
+# Create nodes data frame
+nodes <- data.frame(
+  name = unique(c(as.character(snkyPdata$source), as.character(snkyPdata$target)))
+)
+
+# Add source and target fields
+snkyPdata$IDsource <- match(snkyPdata$source, nodes$name) - 1
+snkyPdata$IDtarget <- match(snkyPdata$target, nodes$name) - 1
+
+# Make Sankey diagram
+sankey <- plot_ly(
+  type = "sankey",
+  orientation = "h",
+  node = list(
+    pad = 15,
+    thickness = 20,
+    line = list(color = "black", width = 0.5),
+    label = nodes$name,
+    hovertemplate = "Acres"
+  ),
+  link = list(
+    source = snkyPdata$IDsource,
+    target = snkyPdata$IDtarget,
+    value = snkyPdata$value,
+    hovertemplate = "Acres"
+  ),
+  textfont = list(size = 16),
+  width = 700,
+  height = 600
+) %>%
+  layout(
+    title = "Change in broad ecosystem types",
+    font = list(size = 14),
+    margin = list(t = 50, l = 20, r = 20, b = 10)
+  )
+
+sankey
+
+
+
+
+```
+
+
+
+
+
+
+### Succession classes for most dominant Biophysical Settings
+
+Using LANDFIRE's Biophysical Settings spatial data to essentially map 'ecosystem habitats' and state-and-transition models to estimate the expected historical amounts of their succession classes we can estimate reference conditions under natural disturbance regimes.  We can then quantify current succession class amounts with LANDFIRE's succession class data.  Below are succession class charts that allow for an exploration of which classes are over or under represented.
+
+In this landscape we observed:
+
+* The Great Basin Xeric Mixed Sagebrush Shrubland had the largest divergence between reference and current conditions with a substantial under representation of class C, which is the "Late - seral community with a mixture of herbaceous and shrub vegetation; 10-25% sagebrush canopy cover present . Dispersed conifer seedlings and saplings established at <6% cover."  Class B, "Mid-seral community with a mixture of herbaceous and shrub vegetation; 6- 25 % sagebrush (sagebrush/brush) canopy cover present" is over represented. 
+* Currently the Inter-Mountain Basins Big Sagebrush Shrubland-Upland system is largely missing classes A and B, which represent the Early post-disturbance grass and forb state, and the mid-open shrub state respectively.
+* In the Inter-Mountain Basins Mixed Salt Desert Scrub system there is an under representation of class B, which is a mid-open class dominated by shadscale, and an over representation of class C, which is a mid-open class dominated by budsage. 
+
+
+
+
+```{r scls chart, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=9}
+
+scls_descriptions <- read_csv("data/scls_descriptions.csv") |>
+  unite(model_label, c("StratumID", "ClassLabelID"), remove = FALSE)
+
+BPS_SCLS2 <- read.csv("data/bpsScls2.csv") 
+
+
+#for percents
+bps_scls_3 <- BPS_SCLS2 %>%
+  group_by(Var1) %>%
+  mutate(total.count = sum(Freq)) %>%
+  ungroup() %>%
+  dplyr::filter(dense_rank(desc(total.count)) < 8) %>%
+  dplyr::select(c("bps_name", "ref_label",  "currentPercent", "ref_percent", "model_label", "total.count")) %>%
+  pivot_longer(
+    cols = c(`ref_percent`, `currentPercent`),
+    names_to = "refCur",
+    values_to = "Percent" ) |>
+  mutate(scls_acres = total.count * 0.2223945 * Percent) %>%
+  left_join(scls_descriptions)
+
+
+
+
+
+
+
+
+# order classes
+bps_scls_3$ref_label <- factor(bps_scls_3$ref_label, levels= c(
+  "Developed",
+  "Agriculture",
+  "UE",
+  "UN",
+  "E",
+  "D",
+  "C",
+  "B",
+  "A"))
+
+
+
+
+sclasplot <-
+  ggplot(bps_scls_3, aes(fill=factor(refCur), y=scls_acres, x=ref_label)) + 
+  geom_col(width = 0.8, position = position_dodge()) +
+  coord_flip() +
+  facet_grid(. ~BpS) +
+  scale_x_discrete(limits = (levels(bps_scls_3$ref_label))) +
+  labs(
+    title = "Succession Classes past and present",
+    subtitle = "Top BpSs selected for illustration. Not all succession classes present in all BpSs",
+    caption = "\nData from landfire.gov.",
+    x = "",
+    y = "Acres")+
+  theme_minimal(base_size = 14)+
+  theme(plot.caption = element_text(hjust = 0, face= "italic"), #Default is hjust=1
+        plot.title.position = "plot", #NEW parameter. Apply for subtitle too.
+        plot.caption.position =  "plot") +
+  scale_fill_manual(values = c("#3d4740", "#32a852" ), # present (grey), historical (green)
+                    name = " ", 
+                    labels = c("Present",
+                               "Past")) +
+  facet_wrap(~bps_name, nrow(3),labeller = labeller(bps_name = label_wrap_gen())) +
+    theme(panel.spacing = unit(.05, "lines"),
+        panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        strip.background = element_rect(color = "black", size = 1)) +
+  scale_y_continuous(labels = comma) 
+
+sclasplot
+
+```
+
+## Succession Class Descriptions
+
+Below is a table of the Succession Class descriptions for the Biophysical Settings charted above.  For complete Biophysical Settings descriptions see links on [Past](./past.html){target='blank'} page. 
+
+
+
+
+```{r}
+#| label: sclass descriptions
+#| echo: false
+#| message: false
+#| warning: false
+
+
+for_scl_table <-  bps_scls_3 |>
+  filter(across(everything(), ~ !is.na(.x))) |>
+  filter(str_detect(refCur, "ref")) |>
+  select(c(bps_name,
+           ref_label,
+           StateClassID,
+           Description
+           )) |>
+  distinct(Description, .keep_all = TRUE) |>
+  rename(c('Biophysical Setting' = bps_name,
+           'Class' = ref_label,
+           'Class Label' = StateClassID,
+           ))
+
+# Render the table with DT
+datatable(for_scl_table, options = list(
+  columnDefs = list(list(
+    targets = 3, # Index of the Description column (0-based)
+    render = JS("function(data, type, row, meta) {
+      return type === 'display' && data.length > 50 ? 
+        '<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;
+    }")
+  )),
+  #scrollX = TRUE,
+  autoWidth = TRUE,
+  lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')) # Add options for 5, 10, and all entries
+))
+
+
+
+
+```
+
+
+
+
+
+

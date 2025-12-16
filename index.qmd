@@ -1,0 +1,97 @@
+---
+title: "Western Shawnee/Cache River"
+author: "The Nature Conservancy's LANDFIRE Team"
+---
+
+<font size="4"> 
+**These LANDFIRE-Powered Landscape Assessments allow users to start exploring trends, landscape conversion and natural resource management options. **
+
+</font> 
+
+
+## Goals of this demonstration
+
+We will use [LANDFIRE](https://landfire.gov/){target="blank"} products to:
+
+1. Characterize and map past and present ecosystem conditions.
+2. Explore historical disturbance patterns.
+3. Summarize patterns of change and management opportunities.
+
+
+The following charts, maps, and graphs are based on 2023 LANDFIRE products, and provide a starting point for further analysis.
+
+
+This demonstration will:
+
+* Provide context for the past and present ecosystem conditions of the Bureau of Land Managment-Ely District.
+* Demonstrate the power of data visualization to explore ecological patterns and functions using LANDFIRE products.
+* Facilitate an understanding of historical and current conditions on a regional scale.
+
+
+
+## Location of this assessment
+
+
+
+<br>
+
+```{r libraries, message=FALSE, warning=FALSE, include=FALSE}
+
+library(foreign)
+library(sf)
+library(terra)
+library(tidyverse)
+library(raster)
+
+
+```
+
+
+```{r read shapefile, message=FALSE, warning=FALSE, include=FALSE}
+#  read shape
+shp <- st_read("data/wscr_tnc.shp") %>% 
+  st_transform(crs = 5070) %>%
+  st_union() %>%
+  st_sf()
+
+
+
+
+# Check if geometries are valid
+ valid <- st_is_valid(shp, reason = TRUE)
+ print(valid)
+
+ # Fix invalid geometries if needed
+ shp <- st_make_valid(shp)
+
+
+```
+
+```{r locator map, message=FALSE, warning=FALSE, echo=FALSE}
+library(tmap)
+
+# toggle tmap mode to interactive viewing
+tmap_mode("view")
+
+ quickmap <- qtm(shp, 
+                 col  = "darkgreen", 
+                 fill = NULL, 
+                 check.and.fix = TRUE, 
+                 title = 'Western Shawnee/Cache River')
+
+ quickmap
+
+
+
+
+
+
+```
+
+## How to use this web report
+
+* All maps, input datasets and further assistance can be obtained by contacting the author, [Randy Swaty](mailto:rswaty@tnc.org){target="blank"}.
+* Review is ongoing.
+* To share this web app, simply share the hyperlink.
+* Toggle between dark and light display of this site in the upper right corner of the page.
+* Learn more about LANDFIRE and The Nature Conservancy [here](about.qmd){target="blank}. 
