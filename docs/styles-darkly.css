@@ -1,0 +1,27 @@
+/* Custom CSS for DataTable */
+.dataTables_wrapper {
+  background-color: white;
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  background-color: white;
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background-color: #ddd;
+  color: black;
+}

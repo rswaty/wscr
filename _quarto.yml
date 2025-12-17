@@ -14,8 +14,8 @@ website:
         text: Past
       - href: present.qmd
         text: Present
-      - href: comparing.qmd
-        text: Comparing
+      - href: departure.qmd
+        text: Departure
       - href: about.qmd
         text: About
         

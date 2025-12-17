@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Comparisons – LANDFIRE-Powered Landscape Assessment</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ffa9a6279353761231ec249df0a7fdd3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-24772959a0e306aba8d7698078628ce7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="styles-darkly.css">
+<link rel="stylesheet" href="styles-flatly.css">
+</head>
+
+<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">LANDFIRE-Powered Landscape Assessment</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./past.html"> 
+<span class="menu-text">Past</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./present.html"> 
+<span class="menu-text">Present</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./departure.html" aria-current="page"> 
+<span class="menu-text">Departure</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#succession-classes-for-most-dominant-biophysical-settings" id="toc-succession-classes-for-most-dominant-biophysical-settings" class="nav-link active" data-scroll-target="#succession-classes-for-most-dominant-biophysical-settings">Succession classes for most dominant Biophysical Settings</a></li>
+  <li><a href="#succession-class-descriptions" id="toc-succession-class-descriptions" class="nav-link" data-scroll-target="#succession-class-descriptions">Succession Class Descriptions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Comparisons</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="succession-classes-for-most-dominant-biophysical-settings" class="level3">
+<h3 class="anchored" data-anchor-id="succession-classes-for-most-dominant-biophysical-settings">Succession classes for most dominant Biophysical Settings</h3>
+<p>Using LANDFIRE’s Biophysical Settings spatial data to essentially map ‘ecosystem habitats’ and state-and-transition models to estimate the expected historical amounts of their succession classes we can estimate reference conditions under natural disturbance regimes. We can then quantify current succession class amounts with LANDFIRE’s succession class data. Below are succession class charts that allow for an exploration of which classes are over or under represented.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="departure_files/figure-html/sclass chart-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="succession-class-descriptions" class="level2">
+<h2 class="anchored" data-anchor-id="succession-class-descriptions">Succession Class Descriptions</h2>
+<p>Below is a table of the Succession Class descriptions for the Biophysical Settings charted above. For complete Biophysical Settings descriptions see links on <a href="./past.html" target="blank">Past</a> page.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b046d3bd0269b19e7977" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b046d3bd0269b19e7977">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42"],["Ozark-Ouachita Dry-Mesic Oak Forest","Ozark-Ouachita Dry-Mesic Oak Forest","Ozark-Ouachita Dry-Mesic Oak Forest","Ozark-Ouachita Dry-Mesic Oak Forest","Ozark-Ouachita Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","Southern Interior Low Plateau Dry-Mesic Oak Forest","North-Central Interior Dry-Mesic Oak Forest and Woodland","North-Central Interior Dry-Mesic Oak Forest and Woodland","North-Central Interior Dry-Mesic Oak Forest and Woodland","North-Central Interior Dry-Mesic Oak Forest and Woodland","North-Central Interior Dry-Mesic Oak Forest and Woodland","North-Central Interior Maple-Basswood Forest","North-Central Interior Maple-Basswood Forest","North-Central Interior Maple-Basswood Forest","North-Central Interior Maple-Basswood Forest","South-Central Interior Mesophytic Forest","South-Central Interior Mesophytic Forest","South-Central Interior Mesophytic Forest","Central Tallgrass Prairie","Central Tallgrass Prairie","Central Tallgrass Prairie","Central Interior and Appalachian Floodplain Systems","Central Interior and Appalachian Floodplain Systems","Central Interior and Appalachian Floodplain Systems","Central Interior and Appalachian Floodplain Systems","Central Interior and Appalachian Floodplain Systems","Gulf and Atlantic Coastal Plain Floodplain Systems","Gulf and Atlantic Coastal Plain Floodplain Systems","Gulf and Atlantic Coastal Plain Floodplain Systems","Gulf and Atlantic Coastal Plain Floodplain Systems","North-Central Interior Wet Flatwoods","North-Central Interior Wet Flatwoods","North-Central Interior Wet Flatwoods"],["13040_32_43_44_49","13040_32_43_44_49","13040_32_43_44_49","13040_32_43_44_49","13040_32_43_44_49","13050_47_48","13050_47_48","13050_47_48","13050_47_48","13050_47_48","13050_49","13050_49","13050_49","13050_49","13050_49","13100_49","13100_49","13100_49","13100_49","13100_49","13140_49","13140_49","13140_49","13140_49","13210_49","13210_49","13210_49","14210_49_52","14210_49_52","14210_49_52","14710_47_48_53_54_57_59_60_61_63","14710_47_48_53_54_57_59_60_61_63","14710_47_48_53_54_57_59_60_61_63","14710_47_48_53_54_57_59_60_61_63","14710_47_48_53_54_57_59_60_61_63","14730_45_46_47_98_99","14730_45_46_47_98_99","14730_45_46_47_98_99","14730_45_46_47_98_99","15180_43_47_49_52_62_63_64_65","15180_43_47_49_52_62_63_64_65","15180_43_47_49_52_62_63_64_65"],["A","B","C","D","E","A","B","C","D","E","A","B","C","D","E","A","B","C","D","E","A","B","C","D","A","B","C","A","B","C","A","B","C","D","E","A","B","C","D","A","B","C"],["Early1:ALL","Mid1:CLS","Mid1:OPN","Late1:OPN","Late1:CLS","Early1:ALL","Mid1:CLS","Mid1:OPN","Late1:CLS","Late2:CLS","Early1:ALL","Mid1:OPN","Late1:OPN","Late2:CLS","Late3:CLS","Early1:ALL","Mid1:OPN","Mid2:OPN","Mid3:CLS","Late1:CLS","Early1:ALL","Mid1:ALL","Mid2:CLS","Late1:CLS","Early1:ALL","Mid1:CLS","Late1:CLS","Early1:OPN","Mid1:OPN","Late1:ALL","Early1:ALL","Mid1:CLS","Mid1:OPN","Late1:OPN","Late1:CLS","Early1:ALL","Mid1:CLS","Late1:CLS","Late1:OPN","Early1:ALL","Mid1:CLS","Late1:CLS"],["Sprouts, seedlings, saplings of major overstory species in gaps and openings created or maintained by wind/weather/stress, aboriginal or lightning-caused stand replacement fire , and insect/disease.","Dominated by young to mid-seral species with some development of mid - and understory species. Closed - canopy conditions are a function of mesic (or topographically protected) conditions. Understory/mid - story development with at least two layers present (dependent on age) on these more mesic sites. On drier sites, forested-to-woodland conditions are interspersed , but with a relatively open understory.","Similar overstory species as Class B but in a single - canopy structure without well-developed mid  story. On drier sites , generally more oak  dominated. Variable herbaceous understory ranging from grass to rich herbaceous layers. The understory is a function of moisture gradients, and fire frequency and intensity.","Mature canopy sometimes reaching 100ft in height. Dominant overstory species variable by location and stand history. Open (woodland) conditions dependent on fire frequency and intensity. Generally more oak dominated , with white oak a common dominant.","Canopy may have more non-oak hardwoods such as blackgum , red maple, American beech , and dogwood with well-developed lower layers containing many of the canopy species.","Type can be classified as open oak savanna or barrens as originally described by early European settlers. It is largely dominated by grasses, with few scattered trees. Class A is grasslands/  savanna maintained by frequently recurring fire, on average ~ 90% of this type burned annually. These patch sizes were variable from small and glade-like to large landscape level. Native Americans used these lands for hunting and agriculture/native plant gathering. Large herbivores likely played an important role in maintain in g these systems in an open condition. On the lower elevations of this type, cane was likely a dominant grass cover type. The dominant layer lifeform is grass/herbaceous with a sparse overstory of oak or pine.","Type can be classified as thicket, very similar to old field succession (c lass age = 4- 19yrs ); this is an early tree regeneration (root and stump sprouts) phase; fire frequency is about 3-9yrs. Any area that does not burn frequently is probably too moist and will be populated by mixed-mesophytic tree species. Species such as e astern r ed c edar, e lms, and in some cases Virginia p ine often begin the transition from Class A to Class B. Oak ,  h ickory , and mesophytic species may all be present in this class. Areas that receive frequent surface fires will be populated by fire-adapted species such as oaks and hickories. These fires will top-kill seedlings and sprouts and a proportion of the saplings. These communities will develop in to the mid-seral, open oak-hickory forest class. Occasional fires of high severity will top-kill all trees but will not move the communit y back to the early-seral class.","Type can be classified as open woodland. T his class is defined as the mid-seral open oak-hickory woodland (which gradiates to Class A). This community quite commonly experiences frequent surface fires, and the FRI is typically 5-15yrs. The canopy closure is &lt; 60%. Mesophytic species may be present, but oak-hickory is dominant in the regeneration layer. If fire is absent from this c ommunity for an extended period ( ~ 25-30yrs), the canopy will become less open, moving the community into the late-seral, closed canop y (60-100%), oak-hickory forest. An occasional canopy removal event from fire or weather followed by fire exclusion will move this community back to a mid-seral, close d early tree regeneration phase.  This type can move back to E arly1:All after a canopy removal event, provided that fire is not excluded.","Type can be classified as closed - canopy oak-hickory forest. This class is defined as a late seral closed - canopy oak-hickory forest. Open understories of oak seedlings dominate on dry, xeric sites ,  while mesophytic species dominate on more mesic sites. Stand - replacement fires in late-succession closed class types are rare ( 200-yr interval) and will result in return t o a mid-succession closed class . Widespread, high - severity fire is restricted to drought years due to the mosaic of fuel models. Mixed fire has a FRI of ~ 66yrs and will send the system to a mid-succession patchwork of Mid1:OPN . Low - severity surface fires occur on average every 10yrs and result in maintaining the late-succession closed forest type. If the late-succession open forest type persists for 70yrs without any type of fire, it will convert to a late-succession mixe d mesophytic closed forest type. This conversion is a result of species shift from dominant oaks to dominant maple, tulip tree, and beech, which do not support fire as readily.","Type can be classified as closed mesophytic forests. Mixed (maple) forests develop during the absence of fire. Dense understories of shade-tolerant species develop , causing oak-hickory dominance to fade .","Class A is grasslands/savanna maintain ed by frequently recurring fire. These patches would typically be &lt;100ac, but may have been up to 500ac. Native Americans used these lands for hunting, and agriculture/native plant gathering. If fire is absent for a few years, tree seedlings and sprouts will establish and move the community to the mid-seral, open stage (class C). Tallgrass species dominate, including big bluestem (Andropogon gerardii), little bluestem (Schizachyrium scoparium), and Indiangrass (Sorghastrum nutans), with scattered oaks (Quercus spp.).","T his is an early tree regeneration (root and stump sprouts) phase . Areas that receive frequent surface fires will be populated by fire-adapted species such as oaks and hickories. These fires will top-kill seedlings and sprouts and a proportion of the saplings. These communities will de velop into the mid-seral, open oak-hickory forest class. Occasional fires of high severity will top-kill all trees moving the community back to the early-seral class .","T his class is defined as oak-hickory woodland . The canopy closure is less than 60%. This community quite commonly experiences frequent surface fires. If fire is absent from this community for an extended period, the canopy will become less open, moving the community into the late-seral, closed canopy (60-100 %), oak-hickory forest . An occasional replacement fire will move this community back to an early seral , open stage.","O ak-hickory forest. Open understories of oak seedlings exist. The age class is 100yrs+. Stand replacement fires in late-succes sion open class types are rare an d will result in return to the early succession class . Mixed fire will send the system to a mid-succession open class . Surface fires occur every ten years and result in maintaining the late-succession open forest type.","Maple forests develop in the absence of fire. Dense understories of shade-tolerant species develop.","G rassland prairie maintained by frequently recurring fire. Native Americans used these lands for hunting, and agriculture/native plant gathering.","SAVANNA. Savannas conditions occurred where fire was fairly frequent allowing some trees to develop.","WOODLAND.","OAK FOREST. Class D is defined as oak forest. The age class persists as long as surface fire occurs periodically. If the late-succession open forest type persists for ~ 50yrs without any type of fire, it will convert to a late-succession mixed mesophytic closed forest type (class E). This conversion is a result of species shift from dominant oaks to dominant maple and beech, which do not support fire as readily.","MESOPHYTIC FOREST. Maple forests develop during the absence of fire. Dense understories of shade-tolerant species develop. Surface fires would allow these systems to revert back to oak dominance.","Characterized by early-seral young forest following a catastrophic wind or fire event. Young forest dominated by canopy species that respond rapidly to increased light availability, including northern red oak, basswood, and black cherry. Sugar maple is not likely to establish immediately following fire, but regeneration may be heavy following windthrow events.","Characterized by mid-succession maturing forests. In this stage there is the gradual decline of northern red oak and it is replaced by sugar maple. American elm and basswood increase.","Characterized by late -successional maturing forest . Forest dominated by sugar maple, beech, basswood, white ash, tulip-poplar, black cherry, ironwood, northern red oak.","These old late-seral forests (&gt;150yrs) are the end point of succession. Forest dominated by sugar maple, basswood, white ash, tulip-poplar, ironwood, northern red oak. Small gap disturbances predominate to maintain a high proportion of the acreage in this class. Upper Layer Lifeform is not the dominant lifeform. In this late seral stage there would be a multi-layer canopy and sub-canopy (created through small-scale windthrow). Therefore, although the min tree height is set at 25m in order to make this class exclusive from class C tree height would range from 10-50m.","Regenerating stands established after catastrophic disturbance, primarily wind and ice storms and less frequently by fire. Tree regeneration unfolds from a combination of stump and root sprouts and the seed bank. This short-lived stage exists until canopy closure occurs and resource competition for growing space begins.","Mid-seral closed o verstory; stem exclusion stage.  Intense competition begins after canopy closure and lasts until trees are large enough to form, upon their death, canopy gaps that are not captured by lateral growth of neighboring trees. This \"released\" growing space that is captured by tree and shrub regeneration. Liriodendron tulipifera may temporarily out compete some other slower-growing species.","Closed-canopy mixed- mesophytic forests that develop on mesic landscape positions and have dominant trees that are 100yrs+ of age. Dominant species include Fagus grandifolia , Acer saccharum , Liriodendron tulipifera , Tilia  americana var. heterophylla (local), Prunus serotina , Quercus alba, and Quercus rubra .","Post - Fire Regrowth Stage - - Duration: o ne year. From blackened state, rapid regrowth of fire - positive and fire - neutral perennial vegetation to maximum height by end of growing season. Warm season grasses and fire - positive forbs display increased height, flowering , and fruiting and appear to be more abundant depending on season of the burn. Annual, biennial, and short-lived perennial species occupy space opened by litter removal. Fire - neutral perennial forbs maintain pre-fire composition but may appear to be reduced. Fire - negative species are reduced. No litter accumulation in this class. Upper -l ayer l ifeform is not the dominant lifeform. Open refers to absence of tree or shrub canopy cover .","Unburned Stage - - Duration: 2-4yrs. This unburned stage continues to be dominated by big bluestem ( Andropogon  gerardii ), Indiangrass ( Sorghastrum  nutans ) , and prairie dropseed on more mesic sites with prairie cordgrass ( Spartina  pectinata ) and bluejoint grass dominating the wet sites. Secondary species such as little bluestem ( Schizachyrium  scoparium ) and porcupine grass ( Stipa  spartea ) occupied the drier portions of these uplands and soil types and varied in importance. Perennial forbs include genera such as Asclepias , Aster , Echinacea , Helianthus , Solidago , Liatris , Dalea , and Viola . Noticeable scattered shrubs -- Amorpha , Rosa spp. , and Ceonothus  -- annually increase in size. Litter accumulates annually. Annuals, biennials, and short - lived perennials gradually become less abundant. The cover in this class is defined for mapping purposes as 71-100%. Some shrubs might be coming up in this stage. Uppe r-l ayer l ifeform is not the dominant lifeform. SPHE refers to Sporobolus  heterolepsis .","Unburned Thatch Accumulation Stage â€“ Duration : 5-20yrs. Continuation of unburned state from C lass B ; however, with lack of fire for the long term, the prairie matrix weakens , and it is succeeded by woody cover of shrubs and trees, depending on proximity of woody seed sources. Without fire , the length of this stage is dependent on precipitation and temperature as well as topography and soils. It can be inferred that the effect of large ungulates, bison and elk, was highly limited in this region of this type. As thatch builds up, grasses will start to lose vigor and become less competitive, and then shrubs or trees might start moving in, which would be uncharacteristic because that would be due in part to lack of fire. Upper -l ayer l ifeform is not the dominant lifeform. Herbaceous layer is still dominant but grass cover declining due to thatch. Vegetation cover will not be as dense.","Tree fall gaps and other replacement d isturbance areas with saplings and small trees up to 30cm DBH. Potential canopy species are typically mixed with subcanopy species and herbs, and an occasional stem of a short-lived early successional species such as willow ( Salix nigra ).","Old tree - fall gaps and replacement disturbance wi th closed canopy , ranging from 30-70cm DBH. Shade tolerant species in the understory.","Similar overstory as class B but more open,  without a well-developed mid - story or understor y. Grasses will also be present .","More of a closed canopy then class C with trees ranging from 70-300yrs+ in age with minimal mid - story and understory shrubs and grasses. More shrubs and less grass than C. This class remains in a Late Open until alternate succession.","Closed hardwood canopy wi th older trees present . Extensive shade tolerant shrub u nderstory and mid - story.","This class includes small scale windfall gaps (the principal method of regeneration in mature bottomland hardwood forests in the absence of larger scale disturbance), large scale catastrophic wind disturbance (tornado &amp; hurricane), water impoundment and inundation caused by channel blockage), and catastrophic stand replacement during major flood events . This class includes the fire maintained canebrake community (non - forested type). Average replacement fire is higher in this state because of the ca nebreak community . Infrequ ent surface fire maintains this class until it succeeds to B. Overcup Oak ( Quercus lyrata ) is also an indicator species in this successional stage and resides in the lower canopy.","This class is a mid seral stage bottomland hardwood forest with a closed canopy. Replacement fire is ra re in this state . Infr equent surface fire maintains t his class until succession . Other replacement disturbances include large scale catastrophic wind disturbance (tornado &amp; hurricane) , water impoundment and inundation caused by channel blockage), catastrophic stand replacement during major f lood events , and insec t outbreaks .","This class is a mature, late seral closed canopy bottomland hardwood forest. Replacement fire is r are in this state . Infrequ ent surface fire maintains this class. Other rare disturbances ha ve either a replacement or thinning effect including large scale catastrophic wind disturbance (tornado &amp; hurricane), water impoundment and inundation caused by channel blockage), catastrophic stand replacement during major flood events, and insect outbreaks .","This class occurs through overstory decline in old growth stages, combined with reproductive failure. Replacement fire ra re in this state . Infrequ ent surface fire maintains this class. Other rare disturbances hav e either a replacement or maintenance effect including large scale catastrophic wind disturbance (tornado &amp; hurricane), water impoundment and inundation caused by channel blockage), catastrophic stand replacement during major flood events, and insect outbreaks .","This stage is an early successional stand following flooding or a rare stand-replacing fire. Shrubs increase in dominance over time, although open grass- and sedge-dominated wet meadow may be dominant for the first 10yrs+, particularly in areas in which existing shrubs were flood-killed. Open to dense thicket dominated by species such as Ilex verticillata (winterberry), Vaccinium corymbosum (highbush blueberry), Lindera benzoin (spicebush), Viburnum spp., Alnus rugosa (speckled alder) Cephalanthus occidentalis (buttonbush), Corylus cornuta (hazelnut), Salix spp.(willows), and Cornus spp. (dogwoods). This stage results from major disturbance, including stand-replacement fire, flooding, or windthrow .","Scattered tree canopy develops from seedlings that establish under shrubs. Typical species include silver maple (Acer saccharinum), red maple (Acer rubrum), green ash (Fraxinus pennsylvanica), black ash (Fraxinus nigra), American elm (Ulmus americana), pin oak (Quercus palustris), swamp white oak (Quercus bicolor), sycamore (Platanus occidentalis), cottonwood (Populus deltoides), and a variety of other canopy associates. General appearance is of a shrub-dominated system with an open tree canopy, grading into forested wetland at the end of this period. As with all stages of this system, seasonal annual spring flooding, would occur. This natural process was not explicitly modeled but it should be assumed that it is occurring annually and maintaining the swamp forest instead of allowing it to succeed to drier forest type.","This stage is dominated by the same tree species as class B although the shrub layer is greatly reduced. As with all stages of this system, seasonal annual spring flooding, would occur. This natural process was not explicitly modeled but it should be assumed that it is occurring annually and maintaining the swamp forest instead of allowing it to succeed to drier forest type."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Biophysical Setting<\/th>\n      <th>Model Code<\/th>\n      <th>Class<\/th>\n      <th>Class Label<\/th>\n      <th>Description<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n      return type === 'display' && data.length > 50 ? \n        '<span title=\"' + data + '\">' + data.substr(0, 50) + '...<\/span>' : data;\n    }"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Biophysical Setting","targets":1},{"name":"Model Code","targets":2},{"name":"Class","targets":3},{"name":"Class Label","targets":4},{"name":"Description","targets":5}],"autoWidth":true,"lengthMenu":[[5,10,-1],["5","10","All"]],"order":[],"orderClasses":false}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

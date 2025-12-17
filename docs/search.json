@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "present.html",
+    "href": "present.html",
+    "title": "Present: Current Ecosystem Conditions",
+    "section": "",
+    "text": "LANDFIRE’s Existing Vegetation Type, Cover and Height datasets describe vegetation conditions.\nRead more about LANDFIRE Vegetation Products"
+  },
+  {
+    "objectID": "present.html#map-of-prevalent-existing-vegatation-types-height-and-cover",
+    "href": "present.html#map-of-prevalent-existing-vegatation-types-height-and-cover",
+    "title": "Present: Current Ecosystem Conditions",
+    "section": "Map of prevalent existing vegatation types, height and cover",
+    "text": "Map of prevalent existing vegatation types, height and cover\nIn the map below we present the most dominant Existing Vegetation Types, Height and Cover classes per 10k acre hexagon. The map is followed by charts.\nMap tips:\n\nHover over hexagon to get label of selected layer\nIf you have multiple layers selected in top-right layer control box, the top one will be displayed.\nColors of Existing Vegetation Cover and Height charts below match those of the map\n\n\n\n\n\n\n\n\n\nTop Existing Vegetation Types\n\n\n\n\n\n\n\n\n\n\n\n\nExisting Vegetation Cover\n\n\n\n\n\n\n\n\n\n\n\n\nExisting Vegetation Height"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Western Shawnee/Cache River",
+    "section": "",
+    "text": "These LANDFIRE-Powered Landscape Assessments allow users to start exploring trends, landscape conversion and natural resource management options."
+  },
+  {
+    "objectID": "index.html#goals-of-this-demonstration",
+    "href": "index.html#goals-of-this-demonstration",
+    "title": "Western Shawnee/Cache River",
+    "section": "Goals of this demonstration",
+    "text": "Goals of this demonstration\nWe will use LANDFIRE products to:\n\nCharacterize and map past and present ecosystem conditions.\nExplore historical disturbance patterns.\nSummarize patterns of change and management opportunities.\n\nThe following charts, maps, and graphs are based on 2023 LANDFIRE products, and provide a starting point for further analysis.\nThis demonstration will:\n\nProvide context for the past and present ecosystem conditions of the Bureau of Land Managment-Ely District.\nDemonstrate the power of data visualization to explore ecological patterns and functions using LANDFIRE products.\nFacilitate an understanding of historical and current conditions on a regional scale."
+  },
+  {
+    "objectID": "index.html#location-of-this-assessment",
+    "href": "index.html#location-of-this-assessment",
+    "title": "Western Shawnee/Cache River",
+    "section": "Location of this assessment",
+    "text": "Location of this assessment"
+  },
+  {
+    "objectID": "index.html#how-to-use-this-web-report",
+    "href": "index.html#how-to-use-this-web-report",
+    "title": "Western Shawnee/Cache River",
+    "section": "How to use this web report",
+    "text": "How to use this web report\n\nAll maps, input datasets and further assistance can be obtained by contacting the author, Randy Swaty.\nReview is ongoing.\nTo share this web app, simply share the hyperlink.\nToggle between dark and light display of this site in the upper right corner of the page.\nLearn more about LANDFIRE and The Nature Conservancy here."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About this Project",
+    "section": "",
+    "text": "LANDFIRE (Landscape Fire and Resource Management Planning Tools) is a shared program between the U.S. Department of Agriculture Forest Service Fire and Aviation branch and the U.S. Department of the Interior. LANDFIRE provides 25+ national landscape-scale geo-spatial products, 950 vegetation models, and a suite of tools that support all-lands planning, management, and operations. Included in the product suite are current and historic conditions including ecosystem dynamic models that can be used for conservation, fire planning, and landscape management decisions.\nThe Nature Conservancy (TNC) is a Major Partner in the LANDFIRE Program supported by a cooperative agreement through USDA Forest Service. TNC’s LANDFIRE Team works closely with the LANDFIRE Business Leads, program staff, and other partners to provide support to LANDFIRE and the user community by:\n\nHelping users understand the strengths, weaknesses, and appropriate uses of LANDFIRE products.\nLocating, obtaining, and using geospatial data, tools, and models for fire and natural resource management, planning, and implementation.\nIdentifying and comparing management priorities, evaluating threats to ecosystems, and exploring outcomes under alternative management scenarios.\n\n\nTNC’s LANDFIRE Team is advancing conservation outcomes through collaborative ecosystem science by supporting LANDFIRE users as they locate, obtain and apply the diverse suite of LANDFIRE products and data.\n\nCreated by TNC Ecologist, Randy Swaty, this preliminary landscape assessment leverages LANDFIRE’s unique geospatial products to advance beneficial outcomes for the wildland fire and natural resource communities. The central data in each project are created and managed by the cooperative inter-agency/inter-organizational LANDFIRE program.\nThese charts, maps, and graphs are based on current LANDFIRE products, and provide a starting point for further analysis. All maps, input datasets and further assistance can be obtained by contacting the author, Randy Swaty.\nSubstantial code contributions for GIS data processing by Myles Walimaa."
+  },
+  {
+    "objectID": "about.html#landfire-the-nature-conservancy",
+    "href": "about.html#landfire-the-nature-conservancy",
+    "title": "About this Project",
+    "section": "",
+    "text": "LANDFIRE (Landscape Fire and Resource Management Planning Tools) is a shared program between the U.S. Department of Agriculture Forest Service Fire and Aviation branch and the U.S. Department of the Interior. LANDFIRE provides 25+ national landscape-scale geo-spatial products, 950 vegetation models, and a suite of tools that support all-lands planning, management, and operations. Included in the product suite are current and historic conditions including ecosystem dynamic models that can be used for conservation, fire planning, and landscape management decisions.\nThe Nature Conservancy (TNC) is a Major Partner in the LANDFIRE Program supported by a cooperative agreement through USDA Forest Service. TNC’s LANDFIRE Team works closely with the LANDFIRE Business Leads, program staff, and other partners to provide support to LANDFIRE and the user community by:\n\nHelping users understand the strengths, weaknesses, and appropriate uses of LANDFIRE products.\nLocating, obtaining, and using geospatial data, tools, and models for fire and natural resource management, planning, and implementation.\nIdentifying and comparing management priorities, evaluating threats to ecosystems, and exploring outcomes under alternative management scenarios.\n\n\nTNC’s LANDFIRE Team is advancing conservation outcomes through collaborative ecosystem science by supporting LANDFIRE users as they locate, obtain and apply the diverse suite of LANDFIRE products and data.\n\nCreated by TNC Ecologist, Randy Swaty, this preliminary landscape assessment leverages LANDFIRE’s unique geospatial products to advance beneficial outcomes for the wildland fire and natural resource communities. The central data in each project are created and managed by the cooperative inter-agency/inter-organizational LANDFIRE program.\nThese charts, maps, and graphs are based on current LANDFIRE products, and provide a starting point for further analysis. All maps, input datasets and further assistance can be obtained by contacting the author, Randy Swaty.\nSubstantial code contributions for GIS data processing by Myles Walimaa."
+  },
+  {
+    "objectID": "about.html#biophysical-settings-products",
+    "href": "about.html#biophysical-settings-products",
+    "title": "About this Project",
+    "section": "Biophysical Settings Products",
+    "text": "Biophysical Settings Products\nA Biophysical Setting (BpS) is a concept that represents the vegetation that may have been dominant on the landscape prior to European colonization of North America and is based on both the current biophysical environment and an approximation of the historical disturbance regime.\n\nLANDFIRE collaborated with experts around the country to create a description and model for every BpS in the US. Find BpS descriptions for your area here.\nCheck out the vegetation modeling website to learn how to integrate BpS into your work.\nRead Blankenship et al. (2021) to learn how the models and descriptions were developed."
+  },
+  {
+    "objectID": "about.html#vegetation-products",
+    "href": "about.html#vegetation-products",
+    "title": "About this Project",
+    "section": "Vegetation Products",
+    "text": "Vegetation Products\nLANDFIRE (LF) existing vegetation layers describe the following elements: Existing Vegetation Type (EVT), Existing Vegetation Canopy Cover (EVC), and Existing Vegetation Height (EVH). These layers are created using predictive landscape models based on extensive field-referenced data, satellite imagery and biophysical gradient layers using classification and regression trees.\n\nResources\n\nExisting Vegetation Cover\nExisting Vegetation Height\nExisting Vegetation Type\n\n\n\n\n\n\nQuestions? LANDFIRE is here to help\n\n\nGet in touch with TNC Ecologist, Randy Swaty, (Landscape assessment creator and TNC Ecologist)\nAsk the LANDFIRE Helpdesk\nSearch (& subscribe to) the LANDFIRE YouTube Channel (see tutorials, Office Hours, quick demonstrations)\nSee how others are putting LANDFIRE products to work\nJoin the LANDFIRE Newsletter 2-min read\nCheck out our other LANDFIRE-Powered Assessments Hub"
+  },
+  {
+    "objectID": "departure.html",
+    "href": "departure.html",
+    "title": "Comparisons",
+    "section": "",
+    "text": "Using LANDFIRE’s Biophysical Settings spatial data to essentially map ‘ecosystem habitats’ and state-and-transition models to estimate the expected historical amounts of their succession classes we can estimate reference conditions under natural disturbance regimes. We can then quantify current succession class amounts with LANDFIRE’s succession class data. Below are succession class charts that allow for an exploration of which classes are over or under represented."
+  },
+  {
+    "objectID": "departure.html#succession-class-descriptions",
+    "href": "departure.html#succession-class-descriptions",
+    "title": "Comparisons",
+    "section": "Succession Class Descriptions",
+    "text": "Succession Class Descriptions\nBelow is a table of the Succession Class descriptions for the Biophysical Settings charted above. For complete Biophysical Settings descriptions see links on Past page."
+  },
+  {
+    "objectID": "past.html",
+    "href": "past.html",
+    "title": "Historical Ecosystems and Fire Return Intervals",
+    "section": "",
+    "text": "LANDFIRE’s Biophysical Settings (BpSs) are the source data for the maps and charts below.\n\nBpS models represent the vegetation system that may have been dominant on the landscape prior to Euro-American settlement. These models are based on a combination of the current environment and an approximation of the historical disturbance regime. Read more.\n\nCheck out this 3-minute tutorial for a quick refresher on the basics of Biophysical Settings Models.\nUse this page as a starting point to explore the most prevalent BpSs for your analysis area. In addition to the charts and maps, the historical disturbance data can be directly accessed using this site."
+  },
+  {
+    "objectID": "past.html#most-prevalent-historical-ecosystems-and-fire-return-interval-map",
+    "href": "past.html#most-prevalent-historical-ecosystems-and-fire-return-interval-map",
+    "title": "Historical Ecosystems and Fire Return Intervals",
+    "section": "Most prevalent historical ecosystems and fire return interval map",
+    "text": "Most prevalent historical ecosystems and fire return interval map\nIn the map below we present the most dominant historical ecosystems and historical fire return intervals per 10k acre hexagon.\nMap tips:\n\nHover over hexagon to get label of selected layer\nIf you have multiple layers selected in top-right layer control box, the top one will be displayed.\nColors of Existing Vegetation Cover and Height charts below match those of the map\n\n\n\n\n\n\n\nBiophysical Settings with minor representation removed from map and chart below for clarity"
+  },
+  {
+    "objectID": "past.html#historical-fire-regimes",
+    "href": "past.html#historical-fire-regimes",
+    "title": "Historical Ecosystems and Fire Return Intervals",
+    "section": "Historical Fire Regimes",
+    "text": "Historical Fire Regimes"
+  },
+  {
+    "objectID": "past.html#historical-fire-regimes-split-out-by-fire-type",
+    "href": "past.html#historical-fire-regimes-split-out-by-fire-type",
+    "title": "Historical Ecosystems and Fire Return Intervals",
+    "section": "Historical fire regimes split out by fire type",
+    "text": "Historical fire regimes split out by fire type"
+  },
+  {
+    "objectID": "past.html#associated-biophysical-settings-descriptions",
+    "href": "past.html#associated-biophysical-settings-descriptions",
+    "title": "Historical Ecosystems and Fire Return Intervals",
+    "section": "Associated Biophysical Settings descriptions",
+    "text": "Associated Biophysical Settings descriptions\nBelow you will find a list of Biophysical Settings (BpS) in the map and chart linked to their descriptions. Note:\n\nThere may be multiple BpS names listed. If so, this is because your landscape spans multiple LANDFIRE Map Zones and has multiple ‘variants’ for those BPSs.\n\nThe names below are followed by a number in parentheses. The first 5-digit number is the BPS Code. The following numbers reprent the Map Zones. For example, “13020_65_66” is ‘Laurentian-Acadian Northern Hardwoods forest’ BpS (13020) in Map Zones 65 and 66.\nThe map below will help orient you to the Map Zones for your landscape.\n\n\n\n\n\n\n\n\n\nClicking link will initiate a download of a Microsoft Word file. If you have any issues with this please contact LANDFIRE.\n\n\nCentral Interior and Appalachian Floodplain Systems (14710_44) - 1%Central Interior and Appalachian Floodplain Systems (14710_47_48_53_54_57_59_60_61_63) - 2%Central Interior and Appalachian Floodplain Systems (14710_49_52) - 1%Central Tallgrass Prairie (14210_49_52) - 14%Gulf and Atlantic Coastal Plain Floodplain Systems (14730_32_37_44) - 0%Gulf and Atlantic Coastal Plain Floodplain Systems (14730_45_46_47_98_99) - 2%North-Central Interior Dry Oak Forest and Woodland (13110_44) - 1%North-Central Interior Dry Oak Forest and Woodland (13110_49) - 1%North-Central Interior Dry-Mesic Oak Forest and Woodland (13100_44_50) - 0%North-Central Interior Dry-Mesic Oak Forest and Woodland (13100_47) - 0%North-Central Interior Dry-Mesic Oak Forest and Woodland (13100_49) - 33%North-Central Interior Maple-Basswood Forest (13140_38_39_40_41_42_43_44_50) - 0%North-Central Interior Maple-Basswood Forest (13140_49) - 9%North-Central Interior Wet Flatwoods (15180_43_47_49_52_62_63_64_65) - 2%Open Water (0) - 5%South-Central Interior Mesophytic Forest (13210_47_48_53_57) - 0%South-Central Interior Mesophytic Forest (13210_49) - 13%Southern Interior Low Plateau Dry-Mesic Oak Forest (13050_47_48) - 2%Southern Interior Low Plateau Dry-Mesic Oak Forest (13050_49) - 5%"
+  }
+]
