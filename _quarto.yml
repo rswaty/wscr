@@ -22,8 +22,9 @@ website:
 format:
   html:
     theme: 
-      dark: darkly
       light: flatly
+      dark: darkly
+      
     css:
       - styles-darkly.css
       - styles-flatly.css

@@ -1,5 +1,5 @@
 ---
-title: "Comparisons"
+title: "Vegetation Departure"
 ---
 
 ```{r}
@@ -32,11 +32,13 @@ scls_descriptions <- read_csv("inputs/scls_descriptions.csv") |>
 ```
 
 
-
-### Succession classes for most dominant Biophysical Settings
+### Biophysical Settings and Succession Classes within the Vegetation Departure calculation
 
 Using LANDFIRE's Biophysical Settings spatial data to essentially map 'ecosystem habitats' and state-and-transition models to estimate the expected historical amounts of their succession classes we can estimate reference conditions under natural disturbance regimes.  We can then quantify current succession class amounts with LANDFIRE's succession class data.  Below are succession class charts that allow for an exploration of which classes are over or under represented.
 
+LANDFIRE's Succession Classes Product:
+
+> *characterizes current vegetation conditions with respect to the vegetation species composition (leaf-form and life-form, primarily), cover, and height ranges of the successional states that occur within each Biophysical Settings (BPS). SClass can also represent uncharacteristic vegetation components, including exotic species, tree plantations, canopy cover, etc. These components are not found within the compositional or structural variability of successional states defined for a BPS.* [Read more](https://www.landfire.gov/vegetation/sclass){target="blank"}.
 
 
 ```{r}
@@ -45,7 +47,7 @@ Using LANDFIRE's Biophysical Settings spatial data to essentially map 'ecosystem
 #| message: false
 #| warning: false
 #| fig.width: 10
-#| fig.height: 13
+#| fig.height: 15
 
 # wrangle data for chart
 vdep_chart_df <- clean_vdep %>%
@@ -116,8 +118,8 @@ sclasplot <-
   ) +
   facet_wrap(
     ~ facet_label,
-    nrow = 5,
-    labeller = label_wrap_gen(width = 25)  # wraps on normal spaces; NBSP keeps ", 14%" together
+    ncol = 2,
+    labeller = label_wrap_gen(width = 20 )  # wraps on normal spaces; NBSP keeps ", 14%" together
   ) +
   scale_y_continuous(labels = comma)
 

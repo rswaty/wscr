@@ -45,14 +45,14 @@ map_zones <- st_read("inputs/conus_mapzones_102611.shp", quiet = TRUE) |>
 
 ### LANDFIRE's Biophysical Settings
 
-LANDFIRE's Biophysical Settings (BpSs) are the source data for the maps and charts below. 
+LANDFIRE's Biophysical Settings (BpSs) are the source data for the maps and charts below. Designed for landscape-scale analysis, LANDFIRE datasets are delivered at 30M resolution.  Below we summarize to 10K acre hexagons for ease of viewing and to better match intended scale of use. 
 
 
 > *BpS models represent the vegetation system that may have been dominant on the landscape prior to Euro-American settlement. These models are based on a combination of the current environment and an approximation of the historical disturbance regime.* [Read more](https://landfire.gov/bps.php){target="blank"}.
 
 Check out this 3-minute tutorial for a quick refresher on the [basics of Biophysical Settings Models](https://youtu.be/xjaWJCe7udQ){target="blank"}.
 
-Use this page as a starting point to explore the most prevalent BpSs for your analysis area. In addition to the charts and maps, the historical disturbance data can be directly accessed using this site.
+Use this page as a starting point to explore the most prevalent BpSs and historical fire regimes for your analysis area. In addition to the charts and maps, the historical disturbance data can be directly accessed using this site.
 
 ## Most prevalent historical ecosystems and fire return interval map
 
@@ -63,8 +63,12 @@ In the map below we present the most dominant historical ecosystems and historic
 * Hover over hexagon to get label of selected layer
 * If you have multiple layers selected in top-right layer control box, the top one will be displayed.
 * Colors of Existing Vegetation Cover and Height charts below match those of the map
+* NoData values in the Fire Return Interval layer typically indicate an "Open Water" underlying BpS, or barren ground. 
+* the FRI(years) value in the popup for the Fire Return Interval represents the mean number of years that would have passed between fires for a site for all fire types, surface, mixed or replacement.  For example, a value of 17 indicates that on average there would have been a fire of some type every 17 years.
 
-
+<br>
+*Biophysical Settings with minor representation removed from map and chart below for clarity*
+<br>
 ```{r}
 #| label: bps and fri leaflet
 #| echo: false
@@ -73,46 +77,52 @@ In the map below we present the most dominant historical ecosystems and historic
 #| fig-width: 10
 #| fig.height: 10
 
+
 # --- BPS palette (categorical) ---
 base_palette <- RColorBrewer::brewer.pal(12, "Paired")
-bps_names <- sort(unique(hexs$bps_name))
-bps_colors <- colorRampPalette(base_palette)(length(bps_names))
-pal_bps <- colorFactor(palette = bps_colors, domain = bps_names)
+bps_names    <- sort(unique(hexs$bps_name))
+bps_colors   <- colorRampPalette(base_palette)(length(bps_names))
+pal_bps      <- colorFactor(palette = bps_colors, domain = bps_names)
 
-# --- FRI palette (continuous YlGn) with robust domain handling (Option B: inline handling of -9999) ---
+# --- FRI palette using custom bins/colors (from your table) ---
 no_data_color <- "#4D4D4D"
+
+# Breaks are right-closed (prev, break]; adjust `right = FALSE` if you prefer [prev, break)
+fri_breaks <- c(-Inf, 5, 15, 35, 100, 200, 500, 1300, Inf)
+
+# 8 colors to match 8 intervals; duplicate the last color for the overflow bin (>=1300)
+fri_colors <- c("#BF4A3F", "#F7AC74", "#FFF2A8", "#D5E6CF", "#CED8ED", "#7D9FD1", "#1C76BA", "#1C76BA")
 
 fri_vals  <- hexs$fri_allfir
 fri_valid <- fri_vals[fri_vals != -9999 & !is.na(fri_vals)]
 
-# Safe domain (handles empty, flat, or infinite cases)
-if (length(fri_valid) == 0) {
-  fri_domain <- c(0, 1)
-} else {
-  r <- range(fri_valid, na.rm = TRUE)
-  if (!is.finite(r[1]) || !is.finite(r[2])) {
-    fri_domain <- c(0, 1)
-  } else if (r[1] == r[2]) {
-    eps <- max(1, abs(r[1]) * 0.01)
-    fri_domain <- c(r[1] - eps, r[2] + eps)
-  } else {
-    fri_domain <- r
-  }
-}
+pal_fri <- colorBin(
+  palette  = fri_colors,
+  domain   = fri_valid,
+  bins     = fri_breaks,
+  na.color = no_data_color,
+  right    = TRUE
+)
 
-pal_fri <- colorNumeric(
-  palette  = "YlGn",        # Yellow→Green
-  domain   = fri_domain,
-  na.color = no_data_color
+# --- Legend labels exactly matching breaks ---
+fri_labels <- c(
+  "≤ 5",
+  "5–15",
+  "15–35",
+  "35–100",
+  "100–200",
+  "200–500",
+  "500–1300",
+  "≥ 1300"
 )
 
 # --- Fit to data extent ---
 bbox <- st_bbox(hexs)
 bbox_list <- as.list(bbox)
-json_output <- toJSON(bbox_list, keep_vec_names = TRUE)  # if you need this elsewhere
+json_output <- toJSON(bbox_list, keep_vec_names = TRUE)  # if needed elsewhere
 
-# --- Map with two overlay groups + layer control ---
-leaflet(hexs) %>%
+# --- Build map ---
+m <- leaflet(hexs) %>%
   addTiles() %>%
   fitBounds(
     lng1 = bbox_list$xmin, lat1 = bbox_list$ymin,
@@ -134,13 +144,16 @@ leaflet(hexs) %>%
       style = list("font-weight" = "normal", padding = "3px 8px"),
       textsize = "15px", direction = "auto"
     ),
-    group = "Historical Ecosystem"
+    group = "Historical Ecosystems"
   ) %>%
   
-  # Layer 2: FRI polygons (continuous YlGn; -9999/NA -> dark gray) 
+  # Layer 2: FRI polygons (custom bins/colors; -9999/NA -> dark gray)
   addPolygons(
-    fillColor = ~ifelse(fri_allfir == -9999 | is.na(fri_allfir),
-                        no_data_color, pal_fri(fri_allfir)),
+    fillColor = ~ifelse(
+      fri_allfir == -9999 | is.na(fri_allfir),
+      no_data_color,
+      pal_fri(fri_allfir)
+    ),
     color = "#BDBDC3",
     weight = 1,
     opacity = 1,
@@ -166,38 +179,40 @@ leaflet(hexs) %>%
   ) %>%
   
   # Start with FRI hidden (optional)
-  hideGroup("Fire Return Interval") 
-
-
-
+  hideGroup("Fire Return Interval")
 # 
-#   
-#   # pipe in legends (FRI shows 'No Data' for -9999 via na.label) OPTIONAL
+# # --- FRI Legend (explicit labels & colors) ---
+# m <- m %>%
 #   addLegend(
 #     position = "bottomright",
-#     pal =    pal = pal_fri,
-#     values = ifelse(fri_vals == -9999, NA, fri_vals),
-#     title = "FRI (years)",
-#     na.label = "No Data",
-#     opacity = 0.8
+#     colors   = fri_colors,  # length 8
+#     labels   = fri_labels,  # length 8
+#     title    = "FRI (years)",
+#     opacity  = 1
 #   ) %>%
 #   addLegend(
-#     position = "bottomleft",
-#     pal = pal_bps,
-#     values = bps_names,
-#     title = "BPS",
-#     opacity = 0.8)
-    
+#     position = "bottomright",
+#     colors   = no_data_color,
+#     labels   = "No Data",
+#     title    = NULL,
+#     opacity  = 1
+#   )
+
+# Print map
+m
+
+
 ```
 
 
-*Biophysical Settings with minor representation removed from map and chart below for clarity*
+
 <br>
 <br>
 
 
 
-```{r bps chart, message=FALSE, warning=FALSE, echo=FALSE, fig.width=10, fig.height=10}
+
+```{r bps chart, message=FALSE, warning=FALSE, echo=FALSE, fig.width=10, fig.height=11}
 
 # summarize data by BpS Name attribute for chart.  We do this as an AoI may have multiple variants if it crosses multiple Map Zones. We also limit output dataframe to the top 10 BpSs.  Customize as needed!
 
@@ -234,7 +249,7 @@ bps_acres_chart
 
 
 
-```{r fire bar, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=10}
+```{r fire bar, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=11}
 # read bps attribute table .csv and summarize
 annualFire <- bps_data %>%
   mutate(annual_fire_acres = ((1/FRI_ALLFIR)*ACRES)) %>%
@@ -326,7 +341,7 @@ bps_long$BPS_LABEL <- factor(bps_long$BPS_LABEL,
   theme_minimal(base_size = 12) +
   labs(
     title = "Historical Fire Regimes for top BpSs",
-    subtitle = "Fire types: Replacement = 75 - 100% top kill, Mixed = 26 - 74%, Surface = 0 - 25% \nPercentage of landscape in BpS in parentheses.",
+    subtitle = "Fire types: Replacement = 75 - 100% top kill, Mixed = 26 - 74%, Surface = 0 - 25% \nPercentage of landscape in BpS in parentheses; X-axis numbers represent average number of years between fires.",
     caption = "\nData from landfire.gov.",
     x = "Average years between fires",
     y = "") +
@@ -352,7 +367,7 @@ bps_long$BPS_LABEL <- factor(bps_long$BPS_LABEL,
 Below you will find a list of Biophysical Settings (BpS) in the map and chart  linked to their descriptions.  Note:
 
 * There may be multiple BpS names listed.  If so, this is because your landscape spans multiple LANDFIRE Map Zones and has multiple 'variants' for those BPSs.  
-* The names below are followed by a number in parentheses.  The first 5-digit number is the BPS Code.  The following numbers reprent the Map Zones.  For example, "13020_65_66" is ‘Laurentian-Acadian Northern Hardwoods forest’ BpS (13020) in Map Zones 65 and 66.
+* The names below are followed by a number in parentheses.  The first 5-digit number is the BPS Code.  The following numbers reprent the Map Zones.  For example, "13020_65_66" is ‘Laurentian-Acadian Northern Hardwoods forest’ BpS (13020) in Map Zones 65 and 66 (example only; may or may not be found in this landscape).
 * The map below will help orient you to the Map Zones for your landscape.
 
 <br>

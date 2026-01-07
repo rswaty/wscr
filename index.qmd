@@ -23,7 +23,7 @@ The following charts, maps, and graphs are based on 2023 LANDFIRE products, and 
 
 This demonstration will:
 
-* Provide context for the past and present ecosystem conditions of the Bureau of Land Managment-Ely District.
+* Provide context for the past and present ecosystem conditions of the Western Shawnee/Cache River priority site.
 * Demonstrate the power of data visualization to explore ecological patterns and functions using LANDFIRE products.
 * Facilitate an understanding of historical and current conditions on a regional scale.
 

@@ -42,7 +42,9 @@ LANDFIRE's [Existing Vegetation Type, Cover and Height](https://landfire.gov/veg
 
 [Read more about LANDFIRE Vegetation Products](https://landfire.gov/vegetation.php){target="blank"}
 
-## Map of prevalent existing vegatation types, height and cover 
+Designed for landscape-scale analysis, LANDFIRE datasets are delivered at 30M resolution.  Below we summarize to 10K acre hexagons for ease of viewing and to better match intended scale of use.
+
+## Map of prevalent existing vegetation types, height and cover 
 
 In the map below we present the most dominant Existing Vegetation Types, Height and Cover classes per 10k acre hexagon.  The map is followed by charts.
 
@@ -70,50 +72,92 @@ In the map below we present the most dominant Existing Vegetation Types, Height 
 # No-data color (override ramp's -9999 if you prefer dark gray)
 no_data_color <- "#4D4D4D"
 
-# EVT palette (categorical, like your BPS approach)
-base_palette <- RColorBrewer::brewer.pal(12, "Paired")
-evt_names    <- sort(unique(hexs$evt_name))
-evt_colors   <- colorRampPalette(base_palette)(length(evt_names))
-pal_evt      <- colorFactor(palette = evt_colors, domain = evt_names)
+# --- EVT palette: use the provided name -> hex mapping ---
+evt_palette_named <- c(
+  "Developed-Roads"                                        = "#999999",
+  "Eastern Cool Temperate Fallow/Idle Cropland"            = "#EFEEC5",
+  "Eastern Cool Temperate Pasture and Hayland"             = "#E8E5A4",
+  "Eastern Cool Temperate Row Crop"                        = "#CDC90F",
+  "Eastern Warm Temperate Row Crop"                        = "#9A970B",
+  "North-Central Interior Dry-Mesic Oak Forest and Woodland" = "#70B65F",
+  "North-Central Interior Floodplain Forest"               = "#C4BBD5",
+  "Open Water"                                             = "#D7EDF7",
+  "Ozark-Ouachita Dry-Mesic Oak Forest"                    = "#92C484",
+  "South-Central Interior Large Floodplain Forest"         = "#9B89B4",
+  "South-Central Interior Mesophytic Forest"               = "#00703C",
+  "South-Central Interior Small Stream and Riparian Forest" = "#5E3D7F",
+  "Southeastern Ruderal Grassland"                         = "#3CABB5",
+  "Southeastern Ruderal Wet Meadow & Marsh"                = "#351150",
+  "Southern Interior Low Plateau Dry-Mesic Oak Forest"     = "#00381E"
+)
 
-# Helper: convert a ramp table (evc_ramp / evh_ramp) to a clean lookup
-# Uses 0–255 R,G,B columns to make hex; replaces -9999 with your no_data_color
+# Domain is the set of EVT names in your data (sorted like your original)
+evt_names <- sort(unique(hexs$evt_name))
 
-to_hex_lut <- function(ramp_tbl, no_data_hex = no_data_color) {
-  ramp_tbl %>%
-    dplyr::mutate(
-      Value = as.integer(Value),
-      hex   = rgb(R, G, B, maxColorValue = 255),
-      hex   = ifelse(Value == -9999, no_data_hex, hex)
-    ) %>%
-    dplyr::select(Value, CLASSNAMES, hex)
+# Flag EVT names in data that do NOT have a provided color
+evt_unmapped <- setdiff(evt_names, names(evt_palette_named))
+if (length(evt_unmapped) > 0) {
+  message("EVT names without a provided color: ", paste(evt_unmapped, collapse = "; "))
 }
 
-evc_lut <- to_hex_lut(evc_ramp)
-evh_lut <- to_hex_lut(evh_ramp)
+# Build a palette vector aligned to the domain.
+# For EVT names missing in the provided palette, fall back to no_data_color.
+evt_colors <- vapply(
+  evt_names,
+  function(nm) if (nm %in% names(evt_palette_named)) evt_palette_named[[nm]] else no_data_color,
+  FUN.VALUE = character(1)
+)
 
+# Leaflet categorical palette for EVT (same interface as your working code)
+pal_evt <- colorFactor(palette = evt_colors, domain = evt_names)
 
 # -------------------------
-# 2) Attach hex colors by value to the sf
+# 2) Build EVC/EVH hex lookups and attach to sf (no joins)
 # -------------------------
+
+# Helper: make a named hex vector from a ramp table keyed by Value (integer)
+# Assumes ramp tables have columns: Value, R, G, B (0–255). If they have extra columns
+# (e.g., CLASSNAMES), they are ignored here. -9999 is mapped to no_data_color.
+to_hex_map <- function(ramp_tbl, no_data_hex = no_data_color) {
+  vals <- as.integer(ramp_tbl$Value)
+  hexs <- rgb(ramp_tbl$R, ramp_tbl$G, ramp_tbl$B, maxColorValue = 255)
+  hexs[vals == -9999] <- no_data_hex
+  # return a named vector: names are the value codes
+  names(hexs) <- vals
+  hexs
+}
+
+evc_hex_map <- to_hex_map(evc_ramp, no_data_hex = no_data_color)
+evh_hex_map <- to_hex_map(evh_ramp, no_data_hex = no_data_color)
+
+# Attach hexs directly, preserving your existing label columns (evc_labels, evh_labels)
 hexs2 <- hexs %>%
   mutate(
     evc_value = as.integer(evc_value),
-    evh_value = as.integer(evh_value)
-  ) %>%
-  # join brings in the hex for each code
-  left_join(
-    evc_lut %>% rename(evc_value = Value, evc_hex = hex, evc_class = CLASSNAMES),
-    by = "evc_value"
-  ) %>%
-  left_join(
-    evh_lut %>% rename(evh_value = Value, evh_hex = hex, evh_class = CLASSNAMES),
-    by = "evh_value"
+    evh_value = as.integer(evh_value),
+    evc_hex   = ifelse(
+      is.na(evc_value),
+      no_data_color,
+      ifelse(
+        evc_value %in% as.integer(names(evc_hex_map)),
+        evc_hex_map[as.character(evc_value)],
+        no_data_color
+      )
+    ),
+    evh_hex   = ifelse(
+      is.na(evh_value),
+      no_data_color,
+      ifelse(
+        evh_value %in% as.integer(names(evh_hex_map)),
+        evh_hex_map[as.character(evh_value)],
+        no_data_color
+      )
+    )
   )
 
 # Optional sanity checks (helpful during development)
-evc_missing <- setdiff(unique(hexs2$evc_value), evc_lut$Value)
-evh_missing <- setdiff(unique(hexs2$evh_value), evh_lut$Value)
+evc_missing <- setdiff(unique(hexs2$evc_value), as.integer(names(evc_hex_map)))
+evh_missing <- setdiff(unique(hexs2$evh_value), as.integer(names(evh_hex_map)))
 if (length(evc_missing) > 0) message("EVC values without colors: ", paste(evc_missing, collapse = ", "))
 if (length(evh_missing) > 0) message("EVH values without colors: ", paste(evh_missing, collapse = ", "))
 
@@ -122,7 +166,6 @@ if (length(evh_missing) > 0) message("EVH values without colors: ", paste(evh_mi
 # -------------------------
 bbox <- sf::st_bbox(hexs2)
 bbox_list <- as.list(bbox)
-# json_output <- toJSON(bbox_list, keep_vec_names = TRUE)  # if you need elsewhere
 
 # -------------------------
 # 4) Leaflet map with 3 overlay groups
@@ -134,7 +177,7 @@ leaflet(hexs2) %>%
     lng2 = bbox_list$xmax, lat2 = bbox_list$ymax
   ) %>%
   
-  # Layer A: EVT (Existing Vegetation Type) - categorical palette
+  # Layer A: EVT (Existing Vegetation Type) - categorical palette using provided hexes
   addPolygons(
     fillColor = ~pal_evt(evt_name),
     color = "#BDBDC3",
@@ -162,9 +205,7 @@ leaflet(hexs2) %>%
     highlightOptions = highlightOptions(
       weight = 2, color = "#666", fillOpacity = 1.0, bringToFront = TRUE
     ),
-    label = ~paste0(
-      "Cover: ", evc_labels
-    ),
+    label = ~paste0("Cover: ", evc_labels),
     labelOptions = labelOptions(
       style = list("font-weight" = "normal", padding = "3px 8px"),
       textsize = "15px", direction = "auto"
@@ -182,9 +223,7 @@ leaflet(hexs2) %>%
     highlightOptions = highlightOptions(
       weight = 2, color = "#666", fillOpacity = 1.0, bringToFront = TRUE
     ),
-    label = ~paste0(
-      "Height: ", evh_labels
-    ),
+    label = ~paste0("Height: ", evh_labels),
     labelOptions = labelOptions(
       style = list("font-weight" = "normal", padding = "3px 8px"),
       textsize = "15px", direction = "auto"
@@ -202,14 +241,11 @@ leaflet(hexs2) %>%
   
   # Optionally start with EVC/EVH hidden
   hideGroup("Existing Vegetation Cover") %>%
-  
-  # Optionally start with EVC/EVH hidden
+  hideGroup("Existing Vegetation Height")
 
-  # Start with EVC/EVH hidden
-  hideGroup("Existing Vegetation Cover") %>%
-  hideGroup("Existing Vegetation Height") 
-  
-  
+
+
+
 ```
 
 <br>
